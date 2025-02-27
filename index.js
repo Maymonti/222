@@ -15,8 +15,56 @@ app.use(express.json());
 // ใช้ port ที่ Vercel ให้มา หรือ default เป็น 3000 ในการพัฒนา
 const port = process.env.PORT || 3000;
 
-// ใช้ไฟล์ static จากโฟลเดอร์ code
-app.use(express.static(path.join(__dirname, '..', 'code')));
+// เส้นทางหลักเพื่อแสดง API documentation แทนที่จะใช้ไฟล์ HTML
+app.get('/', (req, res) => {
+    res.json({
+        "Name": "ระบบจัดการสุขภาพเด็ก API",
+        "Author": "Charoenporn Bouyam",
+        "APIs": [
+            // Doctor APIs
+            { "api_name": "/getDoctors/", "method": "get", "description": "ดูข้อมูลหมอทั้งหมด" },
+            { "api_name": "/getDoctor/:id", "method": "get", "description": "ดูข้อมูลหมอตาม ID" },
+            { "api_name": "/addDoctor/", "method": "post", "description": "เพิ่มข้อมูลหมอ" },
+            { "api_name": "/editDoctor/", "method": "put", "description": "แก้ไขข้อมูลหมอ" },
+            { "api_name": "/deleteDoctor/", "method": "delete", "description": "ลบข้อมูลหมอ" },
+            
+            // Appointment APIs
+            { "api_name": "/getAppointments/", "method": "get", "description": "ดูนัดหมายทั้งหมด" },
+            { "api_name": "/getAppointment/:id", "method": "get", "description": "ดูนัดหมายตาม ID" },
+            { "api_name": "/addAppointment/", "method": "post", "description": "เพิ่มนัดหมายใหม่" },
+            { "api_name": "/editAppointment/", "method": "put", "description": "แก้ไขนัดหมาย" },
+            { "api_name": "/deleteAppointment/", "method": "delete", "description": "ลบนัดหมาย" },
+            
+            // Children APIs
+            { "api_name": "/getChildren/", "method": "get", "description": "ดูข้อมูลเด็กทั้งหมด" },
+            { "api_name": "/getChild/:id", "method": "get", "description": "ดูข้อมูลเด็กตาม ID" },
+            { "api_name": "/addChild/", "method": "post", "description": "เพิ่มข้อมูลเด็กใหม่" },
+            { "api_name": "/editChild/", "method": "put", "description": "แก้ไขข้อมูลเด็ก" },
+            { "api_name": "/deleteChild/", "method": "delete", "description": "ลบข้อมูลเด็ก" },
+            
+            // Growth Records APIs
+            { "api_name": "/getGrowthRecords/", "method": "get", "description": "ดูข้อมูลพัฒนาการทั้งหมด" },
+            { "api_name": "/getGrowthRecord/:id", "method": "get", "description": "ดูข้อมูลพัฒนาการตาม ID" },
+            { "api_name": "/addGrowthRecord/", "method": "post", "description": "เพิ่มข้อมูลพัฒนาการใหม่" },
+            { "api_name": "/editGrowthRecord/", "method": "put", "description": "แก้ไขข้อมูลพัฒนาการ" },
+            { "api_name": "/deleteGrowthRecord/", "method": "delete", "description": "ลบข้อมูลพัฒนาการ" },
+            
+            // User APIs
+            { "api_name": "/getUsers/", "method": "get", "description": "ดูข้อมูลผู้ใช้ทั้งหมด" },
+            { "api_name": "/getUser/:id", "method": "get", "description": "ดูข้อมูลผู้ใช้ตาม ID" },
+            { "api_name": "/addUser/", "method": "post", "description": "เพิ่มผู้ใช้ใหม่" },
+            { "api_name": "/editUser/", "method": "put", "description": "แก้ไขข้อมูลผู้ใช้" },
+            { "api_name": "/deleteUser/", "method": "delete", "description": "ลบผู้ใช้" },
+            
+            // Vaccination APIs
+            { "api_name": "/getVaccinations/", "method": "get", "description": "ดูข้อมูลวัคซีนทั้งหมด" },
+            { "api_name": "/getVaccination/:id", "method": "get", "description": "ดูข้อมูลวัคซีนตาม ID" },
+            { "api_name": "/addVaccination/", "method": "post", "description": "เพิ่มประวัติวัคซีนใหม่" },
+            { "api_name": "/editVaccination/", "method": "put", "description": "แก้ไขประวัติวัคซีน" },
+            { "api_name": "/deleteVaccination/", "method": "delete", "description": "ลบประวัติวัคซีน" }
+        ]
+    });
+});
 
 // เชื่อมต่อกับฐานข้อมูล
 const db = mysql.createConnection({
@@ -35,10 +83,16 @@ db.connect((err) => {
     }
 });
 
-// เสิร์ฟไฟล์ HTML หลักที่เส้นทางหลัก
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'code', 'index.html'));
-});
+// ถ้ามีการเรียกใช้ไฟล์ static ยังคงเก็บไว้เผื่อในอนาคต
+// แต่จะไม่ใช้สำหรับเส้นทางหลักอีกต่อไป
+if (process.env.NODE_ENV === 'development') {
+    try {
+        app.use(express.static(path.join(__dirname, '..', 'code')));
+        console.log("Static files enabled for development");
+    } catch (error) {
+        console.log("No static files found, continuing without them");
+    }
+}
 
 // API documentation ย้ายมาที่เส้นทาง /api
 app.get('/api', (req, res) => {
@@ -495,127 +549,4 @@ app.delete('/deleteUser', (req, res) => {
     let message = "Cannot Delete";
     db.query(sql, values, function(err, results, fields) {
         if (err) {
-            return res.json({ error: true, message: err.message });
-        }
-        if (results) { message = "Deleted"; }
-        res.json({ error: false, data: results, msg: message });
-    });
-});
-
-// ============= VACCINATIONS ENDPOINTS =============
-
-// Get all vaccinations
-app.get('/getVaccinations/', (req, res) => {
-    let sql = 'SELECT * FROM child.VACCINATIONS';
-    db.query(sql, function(err, results, fields) {
-        if (err) {
-            return res.json({ error: true, message: err.message });
-        }
-        res.json(results);
-    });
-});
-
-// Get vaccination by ID
-app.get('/getVaccination/:id', (req, res) => {
-    let id = req.params.id;
-    let sql = 'SELECT * FROM child.VACCINATIONS WHERE vaccination_id = ?';
-    db.query(sql, [id], function(err, results, fields) {
-        if (err) {
-            return res.json({ error: true, message: err.message });
-        }
-        res.json(results);
-    });
-});
-
-// Get vaccinations by child ID
-app.get('/getVaccinationsByChild/:id', (req, res) => {
-    let childId = req.params.id;
-    let sql = 'SELECT * FROM child.VACCINATIONS WHERE child_id = ? ORDER BY vaccination_date DESC';
-    db.query(sql, [childId], function(err, results, fields) {
-        if (err) {
-            return res.json({ error: true, message: err.message });
-        }
-        res.json(results);
-    });
-});
-
-// Add new vaccination
-app.post('/addVaccination', (req, res) => {
-    console.log(req.body);
-    let sql = 'INSERT INTO child.VACCINATIONS(child_id, vaccine_name, vaccination_date) VALUES (?, ?, ?)';
-    let values = [
-        req.body.child_id,
-        req.body.vaccine_name,
-        req.body.vaccination_date || new Date().toISOString().slice(0, 10)
-    ];
-    let message = "Cannot Insert";
-    db.query(sql, values, function(err, results, fields) {
-        if (err) {
-            return res.json({ error: true, message: err.message });
-        }
-        if (results) { message = "Inserted"; }
-        res.json({ error: false, data: results, msg: message });
-    });
-});
-
-// Update vaccination
-app.put('/editVaccination', (req, res) => {
-    console.log(req.body);
-    let sql = 'UPDATE child.VACCINATIONS SET child_id = ?, vaccine_name = ?, vaccination_date = ? WHERE vaccination_id = ?';
-    let values = [
-        req.body.child_id,
-        req.body.vaccine_name,
-        req.body.vaccination_date,
-        req.body.vaccination_id
-    ];
-    let message = "Cannot Edit";
-
-    db.query(sql, values, function(err, results, fields) {
-        if (err) {
-            return res.json({ error: true, message: err.message });
-        }
-        if (results) { message = "Updated"; }
-        res.json({ error: false, data: results, msg: message });
-    });
-});
-
-// Delete vaccination
-app.delete('/deleteVaccination', (req, res) => {
-    console.log(req.body);
-    let sql = 'DELETE FROM child.VACCINATIONS WHERE vaccination_id = ?';
-    let values = [req.body.vaccination_id];
-    console.log(values);
-    let message = "Cannot Delete";
-    db.query(sql, values, function(err, results, fields) {
-        if (err) {
-            return res.json({ error: true, message: err.message });
-        }
-        if (results) { message = "Deleted"; }
-        res.json({ error: false, data: results, msg: message });
-    });
-});
-
-// เริ่มเซิร์ฟเวอร์
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
-
-// จัดการ 404 errors สำหรับเส้นทางที่ไม่มี
-app.use((req, res, next) => {
-    res.status(404).json({
-        status: 404,
-        message: "ไม่พบเส้นทางที่ร้องขอ"
-    });
-});
-
-// จัดการ global errors
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({
-        status: 500,
-        message: "เกิดข้อผิดพลาดบนเซิร์ฟเวอร์",
-        error: process.env.NODE_ENV === 'development' ? err.message : undefined
-    });
-});
-
-module.exports = app;
+            return res.json({ error: true, message
