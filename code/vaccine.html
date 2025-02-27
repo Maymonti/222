@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อมูลการรับวัคซีน</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Prompt', 'Kanit', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f3a4f7, #ffabab);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-radius: 20px 20px 0 0;
+            border-bottom: 1px solid #ffecef;
+        }
+        
+        .logo {
+            color: #800080;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            padding: 5px 10px;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .login-btn {
+            background-color: #ff9eb1;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .register-btn {
+            background-color: #ff9eb1;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .content {
+            display: flex;
+            padding: 20px;
+            gap: 30px;
+        }
+        
+        .profile-section {
+            flex: 1;
+            background-color: #ffe5ee;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: block;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-title {
+            text-align: center;
+            color: #800080;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 10px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #800080;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            background-color: #f0f0f0;
+        }
+        
+        .vaccine-section {
+            flex: 2;
+        }
+        
+        .vaccine-info {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .vaccine-chart {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .chart-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .donut-chart {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .chart-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            border-radius: 50%;
+        }
+        
+        .baby-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background-color: #966746;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .dropdown-btn {
+            background-color: #ff9eb1;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            width: 100%;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 10px;
+            margin-top: 5px;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .vaccine-table {
+            flex: 2;
+        }
+        
+        .table-title {
+            color: #800080;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 24px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ffbfca;
+        }
+        
+        th {
+            background-color: #ffccd5;
+        }
+        
+        td {
+            background-color: #fff;
+        }
+        
+        .check-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 50%;
+            border: 2px solid #333;
+            position: relative;
+        }
+        
+        .check-icon::after {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 6px;
+            width: 6px;
+            height: 10px;
+            border: solid black;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .progress-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            font-weight: bold;
+            color: #800080;
+        }
+        
+        .vaccination-stats {
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            color: #800080;
+        }
+    </style>
+</head>
+<body>
+    <body>
+        <nav>
+            <ul>
+                <li><a class="active" href="login.html">เข้าสู่ระบบ</a></li>
+                <li><a href="index.html">หน้าหลัก</a></li>
+                <li><a href="Record%20growth%20data.html">บันทึกข้อมูลการเจริญเติบโต</a></li>
+                <li><a href="vaccine.html">วัคซีน</a></li>
+                <li><a href="Appointment.html">การนัดหมาย</a></li>
+            </ul>
+        </nav>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Logo</div>
+            <div class="nav">
+                <a href="#">หน้าแรก</a>
+                <a href="#">บันทึกข้อมูล</a>
+                <a href="#">การเจริญเติบโต</a>
+                <a href="#">วัคซีน</a>
+                <a href="#">นัดหมาย</a>
+            </div>
+            <div class="auth-buttons">
+
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="profile-section">
+                <h2 class="profile-title">น้อง...</h2>
+                
+                <div class="form-group">
+                    <label>ชื่อ</label>
+                    <input type="text" placeholder="">
+                </div>
+                
+                <div class="form-group">
+                    <label>เพศ</label>
+                    <input type="text" placeholder="">
+                </div>
+                
+                <div class="form-group">
+                    <label>วันเกิด</label>
+                    <input type="text" placeholder="">
+                </div>
+                
+                <div class="form-group">
+                    <label>น้ำหนัก/ส่วนสูง</label>
+                    <input type="text" placeholder="">
+                </div>
+                
+                <div class="form-group">
+                    <label>อื่นๆ</label>
+                    <input type="text" placeholder="">
+                </div>
+
+                <div class="dropdown">
+                    <button class="dropdown-btn">วัคซีน <span>▼</span></button>
+                    <div class="dropdown-content">
+                        <a href="#">วัคซีนตับอักเสบบี</a>
+                        <a href="#">วัคซีนหัดเยอรมัน</a>
+                        <a href="#">วัคซีนโปลิโอ</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="vaccine-section">
+                <h1 class="table-title">วัคซีน</h1>
+                
+                <div class="vaccine-info">
+                    <div class="vaccine-chart">
+                        <div class="profile-img">
+                            <img src="/api/placeholder/100/100" alt="ภาพเด็ก">
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="vaccineChart" width="200" height="200"></canvas>
+                            <div class="chart-center">
+                                <div class="baby-icon"></div>
+                            </div>
+                        </div>
+                        <div class="vaccination-stats">
+                            ได้รับวัคซีนแล้ว: <span id="vaccineCount">0</span> จาก <span id="totalVaccines">0</span><br>
+                            คิดเป็น <span id="vaccinePercentage">0%</span>
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #ff9eb1;"></div>
+                                <span>แรกเกิด</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #ffb6c1;"></div>
+                                <span>2 เดือน</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #ffc0cb;"></div>
+                                <span>4 เดือน</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #ffd1dc;"></div>
+                                <span>6 เดือน</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #ffe4e1;"></div>
+                                <span>9 เดือน-1ปี</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="vaccine-table">
+                        <table id="vaccineTable">
+                            <thead>
+                                <tr>
+                                    <th>วัคซีน</th>
+                                    <th>แรกเกิด</th>
+                                    <th>2เดือน</th>
+                                    <th>4เดือน</th>
+                                    <th>6เดือน</th>
+                                    <th>9เดือน-1ปี</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>วัคซีนตับอักเสบบี</td>
+                                    <td><div class="check-icon" data-checked="true"></div></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>วัคซีนวัณโรค บีซีจี</td>
+                                    <td><div class="check-icon" data-checked="true"></div></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>วัคซีนคอตีบ<br>/บาดทะยัก</td>
+                                    <td></td>
+                                    <td><div class="check-icon" data-checked="true"></div></td>
+                                    <td><div class="check-icon" data-checked="true"></div></td>
+                                    <td><div class="check-icon" data-checked="true"></div></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>วัคซีนโปลิโอ</td>
+                                    <td></td>
+                                    <td><div class="check-icon" data-checked="true"></div></td>
+                                    <td><div class="check-icon" data-checked="true"></div></td>
+                                    <td><div class="check-icon" data-checked="true"></div></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>วัคซีนหัด/คางทูม</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><div class="check-icon" data-checked="true"></div></td>
+                                </tr>
+                                <tr>
+                                    <td>วัคซีนไข้เลือดออก<br>เด็งกี</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><div class="check-icon" data-checked="true"></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ฟังก์ชันสำหรับอัปเดตกราฟและข้อมูลสถิติ
+            function updateVaccinationStats() {
+                const table = document.getElementById('vaccineTable');
+                const rows = table.querySelectorAll('tbody tr');
+                
+                // นับจำนวนวัคซีนที่ได้รับและทั้งหมด
+                let vaccinated = 0;
+                let total = 0;
+                
+                // ข้อมูลสำหรับกราฟ (แยกตามช่วงอายุ)
+                let ageGroups = {
+                    'แรกเกิด': { completed: 0, total: 0 },
+                    '2เดือน': { completed: 0, total: 0 },
+                    '4เดือน': { completed: 0, total: 0 },
+                    '6เดือน': { completed: 0, total: 0 },
+                    '9เดือน-1ปี': { completed: 0, total: 0 }
+                };
+                
+                // ดึงข้อมูลจากตาราง
+                const headers = Array.from(table.querySelectorAll('thead th')).slice(1);
+                
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    
+                    headers.forEach((header, index) => {
+                        const ageGroup = header.textContent;
+                        const cell = cells[index + 1]; // +1 เพราะคอลัมน์แรกเป็นชื่อวัคซีน
+                        
+                        if (cell) {
+                            ageGroups[ageGroup].total++;
+                            total++;
+                            
+                            const checkIcon = cell.querySelector('.check-icon');
+                            if (checkIcon && checkIcon.getAttribute('data-checked') === 'true') {
+                                ageGroups[ageGroup].completed++;
+                                vaccinated++;
+                            }
+                        }
+                    });
+                });
+                
+                // อัปเดตข้อมูลสถิติ
+                document.getElementById('vaccineCount').textContent = vaccinated;
+                document.getElementById('totalVaccines').textContent = total;
+                
+                const percentage = total > 0 ? Math.round((vaccinated / total) * 100) : 0;
+                document.getElementById('vaccinePercentage').textContent = percentage + '%';
+                
+                // สร้างกราฟ
+                const canvas = document.getElementById('vaccineChart');
+                const ctx = canvas.getContext('2d');
+                
+                // เคลียร์แคนวาส
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // กำหนดสีสำหรับแต่ละช่วงอายุ
+                const colors = {
+                    'แรกเกิด': '#ff9eb1',
+                    '2เดือน': '#ffb6c1',
+                    '4เดือน': '#ffc0cb',
+                    '6เดือน': '#ffd1dc',
+                    '9เดือน-1ปี': '#ffe4e1'
+                };
+                
+                // วาดกราฟวงกลม
+                let startAngle = 0;
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const radius = canvas.width / 2;
+                
+                Object.entries(ageGroups).forEach(([ageGroup, data]) => {
+                    if (data.total > 0) {
+                        // คำนวณสัดส่วนของวงกลม
+                        const slice = (data.total / total) * 2 * Math.PI;
+                        const endAngle = startAngle + slice;
+                        
+                        // คำนวณสีตามจำนวนที่ได้รับวัคซีน
+                        ctx.beginPath();
+                        ctx.moveTo(centerX, centerY);
+                        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                        ctx.fillStyle = colors[ageGroup];
+                        ctx.fill();
+                        
+                        // วาดเส้นแบ่ง
+                        ctx.beginPath();
+                        ctx.moveTo(centerX, centerY);
+                        ctx.lineTo(
+                            centerX + radius * Math.cos(startAngle),
+                            centerY + radius * Math.sin(startAngle)
+                        );
+                        ctx.strokeStyle = '#fff';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                        
+                        startAngle = endAngle;
+                    }
+                });
+                
+                // วาดวงกลมตรงกลางสำหรับ donut chart
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius * 0.5, 0, 2 * Math.PI);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+            }
+            
+            // เรียกใช้ฟังก์ชันเมื่อโหลดหน้า
+            updateVaccinationStats();
+            
+            // เพิ่มการตอบสนองเมื่อคลิกที่ check-icon
+            document.querySelectorAll('.check-icon').forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const isChecked = this.getAttribute('data-checked') === 'true';
+                    
+                    if (isChecked) {
+                        this.setAttribute('data-checked', 'false');
+                        this.style.backgroundColor = '#fff';
+                        this.style.borderColor = '#ccc';
+                        this.style.setProperty('--check-display', 'none');
+                        this.innerHTML = '';
+                    } else {
+                        this.setAttribute('data-checked', 'true');
+                        this.style.backgroundColor = '#fff';
+                        this.style.borderColor = '#333';
+                        this.innerHTML = '';
+                        const checkMark = document.createElement('div');
+                        checkMark.style.position = 'absolute';
+                        checkMark.style.top = '3px';
+                        checkMark.style.left = '6px';
+                        checkMark.style.width = '6px';
+                        checkMark.style.height = '10px';
+                        checkMark.style.border = 'solid black';
+                        checkMark.style.borderWidth = '0 2px 2px 0';
+                        checkMark.style.transform = 'rotate(45deg)';
+                        this.appendChild(checkMark);
+                    }
+                    
+                    // อัปเดตกราฟเมื่อมีการเปลี่ยนแปลงข้อมูล
+                    updateVaccinationStats();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

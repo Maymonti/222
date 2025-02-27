@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การเจริญเติบโต - ระบบติดตามพัฒนาการเด็กแรกเกิด-6ขวบ</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* ฟอนต์และการตั้งค่าพื้นฐาน */
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Prompt', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f3a4f7, #ffabab);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 80px 15px 20px;
+        }
+        
+        /* ปรับปรุงเมนูนำทาง */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            z-index: 1000;
+            padding: 8px 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 1000px;
+        }
+
+        nav ul li {
+            position: relative;
+            margin: 0 5px;
+        }
+
+        nav ul li a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #6a0072;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        nav ul li a i {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background-color: #6a0072;
+            transition: height 0.3s ease;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        nav ul li a:hover::before {
+            height: 100%;
+        }
+
+        nav ul li a:hover {
+            color: #8a118a;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(106, 0, 114, 0.2);
+        }
+
+        nav ul li a:hover i {
+            transform: scale(1.2);
+        }
+
+        nav ul li a.active {
+            color: white;
+            background-color: #6a0072;
+            box-shadow: 0 4px 10px rgba(106, 0, 114, 0.3);
+        }
+
+        nav ul li a.active:hover {
+            background-color: #5a095a;
+        }
+        
+        /* คอนเทนเนอร์หลัก */
+        .app-container {
+            background-color: #fff;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 230, 240, 0.9);
+            border: 8px solid white;
+        }
+        
+        /* ส่วนหัว */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+        }
+        
+        .logo {
+            color: #6a0072;
+            font-size: 50px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        /* เมนูนำทาง */
+        .nav-menu {
+            display: flex;
+            gap: 15px;
+            margin-left: 40px;
+        }
+        
+        .nav-item {
+            background-color: white;
+            color: #6a0072;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(106, 0, 114, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item i {
+            margin-right: 8px;
+            font-size: 1.1em;
+            transition: transform 0.3s;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b8b, #ff9eb4);
+            transition: transform 0.3s;
+            transform: translateY(5px);
+        }
+        
+        .nav-item:hover {
+            background-color: #f9f0fa;
+            transform: translateY(-3px);
+        }
+        
+        .nav-item:hover i {
+            transform: rotate(10deg) scale(1.2);
+        }
+        
+        .nav-item:hover::after {
+            transform: translateY(0);
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, #6a0072, #9c27b0);
+            color: white;
+            box-shadow: 0 5px 15px rgba(106, 0, 114, 0.3);
+        }
+        
+        .nav-item.active::after {
+            background: linear-gradient(90deg, #ffeb3b, #ff9800);
+            transform: translateY(0);
+        }
+        
+        /* ปุ่มล็อกอินและสมัครสมาชิก */
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .login-btn, .signup-btn {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .login-btn {
+            background-color: #ff6b8b;
+            color: white;
+        }
+        
+        .signup-btn {
+            background-color: #ffd2de;
+            color: #6a0072;
+        }
+        
+        .login-btn:hover, .signup-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        /* ส่วนเนื้อหา */
+        .content {
+            display: flex;
+            flex: 1;
+            padding: 0 40px 20px;
+        }
+        
+        /* โปรไฟล์ด้านซ้าย */
+        .profile-card {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 30px;
+            width: 300px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 30px;
+        }
+        
+        .profile-header {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+        }
+        
+        .menu-dots {
+            font-size: 24px;
+            color: #6a0072;
+            cursor: pointer;
+        }
+        
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 10px 0;
+        }
+        
+        .profile-name {
+            color: #6a0072;
+            font-weight: bold;
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        
+        /* กลุ่มปุ่มในโปรไฟล์ */
+        .profile-buttons {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .profile-btn {
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 15px;
+            padding: 10px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background-color 0.2s;
+        }
+        
+        .profile-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        /* แถบด้านล่างของโปรไฟล์ */
+        .profile-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding-top: 20px;
+        }
+        
+        .footer-icon {
+            font-size: 24px;
+            color: #6a0072;
+            cursor: pointer;
+        }
+        
+        /* หน้าข้อมูลด้านขวา */
+        .data-card {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 30px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .data-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .data-title {
+            color: #6a0072;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .back-button {
+            font-size: 20px;
+            color: #6a0072;
+            cursor: pointer;
+        }
+        
+        .edit-button {
+            background-color: #6a0072;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        /* สไตล์สำหรับคลาสที่ใช้ในเนื้อหา */
+        .birth-date, .weight, .vaccine-date, .other-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            color: #444;
+            font-size: 14px;
+            border-radius: 15px;
+            margin-bottom: 8px;
+        }
+
+        .birth-date {
+            background-color: #f0f0f0;
+        }
+
+        .weight {
+            background-color: #f0f0f0;
+        }
+
+        .vaccine-date {
+            background-color: #f0f0f0;
+        }
+
+        .other-info {
+            background-color: #f0f0f0;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: #6a0072;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .close-modal {
+            font-size: 24px;
+            cursor: pointer;
+            color: #6a0072;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .form-cancel, .form-submit {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .form-cancel {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .form-submit {
+            background-color: #ff6b8b;
+            color: white;
+        }
+
+        /* Data content */
+        .data-content {
+            padding: 10px;
+            overflow-y: auto;
+            max-height: calc(85vh - 140px);
+        }
+
+        .data-item {
+            background-color: #f0f0f0;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .data-item h3 {
+            color: #6a0072;
+            margin-bottom: 10px;
+        }
+
+        .data-item p {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        /* ปุ่มกระทำการในหน้าข้อมูล */
+        .action-button {
+            background-color: #ff6b8b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-top: 10px;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        /* สไตล์ตารางแสดงข้อมูล */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .data-table th {
+            background-color: #f5f5f5;
+            color: #6a0072;
+            font-weight: bold;
+        }
+
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* แผนภูมิและกราฟ */
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ฟอร์มข้อมูลการเจริญเติบโต */
+        .growth-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .form-label {
+            font-weight: bold;
+            color: #6a0072;
+            min-width: 120px;
+        }
+        
+        .form-input {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            border-radius: 10px;
+            flex: 1;
+        }
+        
+        .form-unit {
+            color: #6a0072;
+            font-weight: 500;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .btn-confirm {
+            background-color: #42b983;
+        }
+        
+        .btn-edit {
+            background-color: #ff6b8b;
+        }
+        
+        .btn-add {
+            background-color: #6a0072;
+        }
+        
+        /* รายการประวัติการเจริญเติบโต */
+        .growth-history {
+            margin-top: 20px;
+        }
+        
+        .history-title {
+            color: #6a0072;
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        /* รองรับหน้าจอมือถือ */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                flex: 1 1 auto;
+                min-width: 120px;
+                margin-bottom: 5px;
+            }
+
+            nav ul li a {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
+            
+            .content {
+                flex-direction: column;
+            }
+            
+            .profile-card {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-left: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .logo {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav ul li a i {
+                font-size: 1rem;
+                margin-bottom: 3px;
+            }
+
+            nav ul li a {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .app-container {
+                height: auto;
+                min-height: 85vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ</a></li>
+            <li><a href="index.html"><i class="fas fa-home"></i> หน้าหลัก</a></li>
+            <li><a href="Record%20growth%20data.html" class="active"><i class="fas fa-chart-line"></i> บันทึกการเจริญเติบโต</a></li>
+            <li><a href="vaccine.html"><i class="fas fa-syringe"></i> วัคซีน</a></li>
+            <li><a href="Appointment.html"><i class="far fa-calendar-check"></i> การนัดหมาย</a></li>
+        </ul>
+    </nav>
+    
+    <div class="app-container">
+        <!-- ส่วนหัว -->
+        <div class="header">
+            <a href="#" class="logo" onclick="navigateTo('index.html')">BabyGrow</a>
+            
+            <div class="nav-menu">
+                <a href="#" class="nav-item" onclick="navigateTo('index.html')">
+                    <i class="fas fa-home"></i> หน้าแรก
+                </a>
+                <a href="#" class="nav-item" onclick="navigateTo('record.html')">
+                    <i class="fas fa-clipboard-list"></i> บันทึกข้อมูล
+                </a>
+                <a href="#" class="nav-item active" onclick="navigateTo('growth.html')">
+                    <i class="fas fa-child"></i> การเจริญเติบโต
+                </a>
+                <a href="#" class="nav-item" onclick="navigateTo('vaccine.html')">
+                    <i class="fas fa-syringe"></i> วัคซีน
+                </a>
+                <a href="#" class="nav-item" onclick="navigateTo('appointment.html')">
+                    <i class="far fa-calendar-check"></i> นัดหมาย
+                </a>
+            </div>
+            
+            <div class="auth-buttons">
+            </div>
+        </div>
+        
+        <!-- ส่วนเนื้อหา -->
+        <div class="content">
+            <!-- โปรไฟล์ด้านซ้าย -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="menu-dots" onclick="openProfileMenu()">...</div>
+                </div>
+                
+                <img src="/api/placeholder/200/200" alt="โปรไฟล์เด็ก" class="profile-image" onclick="openChangePhotoModal()">
+                <div class="profile-name" id="childName"></div>
+                
+                <!-- แถบด้านล่างของโปรไฟล์ -->
+                <div class="profile-footer">
+                    <div class="footer-icon" onclick="navigateTo('index.html')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </div>
+                    <div class="footer-icon" onclick="openAddChildModal()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                    </div>
+                    <div class="footer-icon" onclick="showFavorites()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- หน้าข้อมูลด้านขวา -->
+            <div class="data-card">
+                <div class="data-header">
+                    <div class="data-title" id="dataTitle">การเจริญเติบโต - น้องแม็กซ์</div>
+                    <div class="back-button" onclick="navigateTo('index.html')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- เนื้อหาข้อมูล -->
+                <div class="data-content" id="dataContent">
+                    <div class="growth-form">
+                        <div class="form-row">
+                            <label class="form-label">วันที่ปัจจุบัน:</label>
+                            <input type="date" class="form-input" id="currentDate">
+                        </div>
+                        
+                        <div class="form-row">
+                            <label class="form-label">วันเกิด:</label>
+                            <input type="date" class="form-input" id="birthDate" value="2022-05-15">
+                        </div>
+                        
+                        <div class="form-row">
+                            <label class="form-label">เพศ:</label>
+                            <select class="form-input" id="gender">
+                                <option value="male" selected>ชาย</option>
+                                <option value="female">หญิง</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label class="form-label">วันที่บันทึก:</label>
+                            <input type="date" class="form-input" id="recordDate">
+                        </div>
+                        
+                        <div class="form-row">
+                            <label class="form-label">น้ำหนัก:</label>
+                            <input type="number" class="form-input" id="weight" step="0.1" value="12.5">
+                            <span class="form-unit">กก.</span>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label class="form-label">ส่วนสูง:</label>
+                            <input type="number" class="form-input" id="height" step="0.1" value="85.5">
+                            <span class="form-unit">ซม.</span>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label class="form-label">รอบศีรษะ:</label>
+                            <input type="number" class="form-input" id="headCircumference" step="0.1" value="47.5">
+                            <span class="form-unit">ซม.</span>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="action-btn btn-confirm" onclick="submitGrowthData()">ยืนยัน</button>
+                            <button class="action-btn btn-edit" onclick="editGrowthData()">แก้ไข</button>
+                            <button class="action-btn btn-add" onclick="addNewGrowthData()">เพิ่มข้อมูล</button>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                    
+                    <div class="growth-history">
+                        <h3 class="history-title">ประวัติการเจริญเติบโต</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>วันที่</th>
+                                    <th>อายุ</th>
+                                    <th>น้ำหนัก (กก.)</th>
+                                    <th>ส่วนสูง (ซม.)</th>
+                                    <th>รอบศีรษะ (ซม.)</th>
+                                    <th>การจัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="growthHistoryBody">
+                                <tr>
+                                    <td>15/10/2566</td>
+                                    <td>1 ปี 5 เดือน</td>
+                                    <td>12.5</td>
+                                    <td>85.5</td>
+                                    <td>47.5</td>
+                                    <td>
+                                        <button class="action-button" onclick="editGrowthRecord(1)">แก้ไข</button>
+                                        <button class="action-button" onclick="deleteGrowthRecord(1)">ล

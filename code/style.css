@@ -1,0 +1,714 @@
+
+        /* ฟอนต์และการตั้งค่าพื้นฐาน */
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Prompt', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #6c0c6c;
+            --secondary-color: #f8d6ff;
+            --gradient-start: #f3a4f7;
+            --gradient-end: #ffabab;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --light-color: #ffffff;
+            --dark-color: #333333;
+            --success-color: #42b983;
+            --warning-color: #ffc107;
+            --danger-color: #ff4757;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f3a4f7, #ffabab);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* คอนเทนเนอร์หลัก */
+        .app-container {
+            background-color: var(--light-color);
+            width: 95%;
+            max-width: 1280px;
+            min-height: 90vh;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* ส่วนหัว */
+        .header {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        /* เมนูนำทาง */
+        .nav-menu {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .nav-item {
+            padding: 10px 16px;
+            border-radius: 8px;
+            color: var(--dark-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-color);
+            background-color: var(--secondary-color);
+        }
+        
+        .nav-item:hover:not(.active) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        /* ปุ่มล็อกอินและสมัครสมาชิก */
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #6a24a5;
+        }
+        
+        /* Main content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+        
+        /* Dashboard grid */
+        .dashboard {
+            flex: 1;
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: auto auto auto;
+            gap: 20px;
+            background-color: #f5f5fa;
+        }
+        
+        /* Profile section */
+        .profile-section {
+            grid-column: span 3;
+            grid-row: span 3;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .profile-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .profile-info {
+            color: var(--dark-color);
+            opacity: 0.7;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background-color: #f8f8fc;
+            border-radius: 12px;
+            padding: 10px;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--dark-color);
+            opacity: 0.7;
+        }
+        
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            margin-top: auto;
+        }
+        
+        /* Growth card */
+        .growth-card {
+            grid-column: span 5;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .card-action {
+            color: var(--primary-color);
+            font-size: 14px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .growth-chart {
+            width: 100%;
+            height: 200px;
+            background-color: #f8f8fc;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .chart-placeholder {
+            color: var(--dark-color);
+            opacity: 0.5;
+            text-align: center;
+        }
+        
+        .growth-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .growth-stat {
+            text-align: center;
+        }
+        
+        .growth-value {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--primary-color);
+        }
+        
+        .growth-label {
+            font-size: 12px;
+            color: var(--dark-color);
+            opacity: 0.7;
+        }
+        
+        /* Milestone card */
+        .milestone-card {
+            grid-column: span 4;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+        
+        .milestone-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        
+        .milestone-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background-color: #f8f8fc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .milestone-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .milestone-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .icon-completed {
+            background-color: rgba(66, 185, 131, 0.2);
+            color: var(--success-color);
+        }
+        
+        .icon-pending {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: var(--warning-color);
+        }
+        
+        .milestone-text {
+            font-size: 14px;
+        }
+        
+        .milestone-age {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .milestone-desc {
+            color: var(--dark-color);
+        }
+        
+        .milestone-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .status-completed {
+            background-color: rgba(66, 185, 131, 0.2);
+            color: var(--success-color);
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: var(--warning-color);
+        }
+        
+        /* รายชื่อเด็ก (CHILDREN LIST) - เพิ่มใหม่ */
+        .children-list-card {
+            grid-column: span 9;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .children-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .children-table th {
+            background-color: #f8f8fc;
+            padding: 12px 15px;
+            text-align: left;
+            color: var(--primary-color);
+            font-weight: 500;
+            border-bottom: 1px solid #e0e0e5;
+        }
+        
+        .children-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f5;
+        }
+        
+        .children-table tr:hover {
+            background-color: #f8f8fc;
+        }
+        
+        .gender-male {
+            color: #3498db;
+            font-weight: 500;
+        }
+        
+        .gender-female {
+            color: #e84393;
+            font-weight: 500;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-right: 5px;
+        }
+        
+        .children-action-cell {
+            display: flex;
+        }
+        
+        .action-view {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .action-edit {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .search-container {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #e0e0e5;
+            border-radius: 8px 0 0 8px;
+            font-size: 14px;
+        }
+        
+        .search-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            padding: 0 20px;
+            cursor: pointer;
+        }
+        
+        .children-list-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .pagination {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .page-btn {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            background-color: #f8f8fc;
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .page-btn:hover:not(.active) {
+            background-color: #e0e0e5;
+        }
+        
+        /* Vaccine card */
+        .vaccine-card {
+            grid-column: span 6;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+        
+        .vaccine-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .vaccine-table th {
+            background-color: #f8f8fc;
+            padding: 10px;
+            text-align: left;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .vaccine-table td {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f5;
+        }
+        
+        .vaccine-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        /* Appointment card */
+        .appointment-card {
+            grid-column: span 6;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+        
+        .appointment-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            background-color: #f8f8fc;
+        }
+        
+        .appointment-date {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        .date-day {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .appointment-details {
+            flex: 1;
+        }
+        
+        .appointment-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 2px;
+        }
+        
+        .appointment-info {
+            font-size: 13px;
+            color: var(--dark-color);
+            opacity: 0.7;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .close-modal {
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--dark-color);
+            opacity: 0.7;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e5;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='14' height='8' viewBox='0 0 14 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L7 7L13 1' stroke='%23343A40' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        /* Tab for children list */
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e0e0e5;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            font-weight: 500;
+            color: var(--dark-color);
+            opacity: 0.7;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-color);
+            opacity: 1;
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .tab-btn:hover:not(.active) {
+            opacity: 0.9;
+        }
